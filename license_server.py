@@ -62,17 +62,19 @@ def verify_with_gumroad(license_key: str) -> tuple[bool, dict]:
     """Ask Gumroad if this key is valid for our product."""
     try:
         resp = requests.post(
-    "https://api.gumroad.com/v2/licenses/verify",
-    data={
-        "product_permalink": PRODUCT_PLINK,
-        "product_id":        "TmVY57dKy1hpU34EFeQPxw==",
-        "license_key":       license_key,
-        "increment_uses_count": "false",
-    },
+            "https://api.gumroad.com/v2/licenses/verify",
+            data={
+                "product_permalink": PRODUCT_PLINK,
+                "product_id": "TmVY57dKy1hpU34EFeQPxw==",
+                "license_key": license_key,
+                "increment_uses_count": "false",
+            },
+            timeout=10)
         data = resp.json()
         return data.get("success", False), data
     except Exception as e:
         return False, {"error": str(e)}
+    
 
 def is_revoked(key: str) -> bool:
     db = get_db()
